@@ -7,15 +7,21 @@
 
 require('./bootstrap');
 
-
 window.Vue = require('vue');
 
 import { Form, HasError, AlertError } from 'vform'
-
 window.Form = Form;
-
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
+
+import moment from 'moment'
+
+import VueProgressBar from 'vue-progressbar' 
+Vue.use(VueProgressBar, {
+    color: 'rgb(143, 255, 199)',
+    failedColor: 'red',
+    height: '3px'
+});
 
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
@@ -31,7 +37,13 @@ const router = new VueRouter({
     routes // short for `routes: routes`
 })
   
+Vue.filter('upText',function(text){
+    return text.charAt(0).toUpperCase() + text.slice(1);
+});
 
+Vue.filter('createdDate',function(created){
+    return moment(created).format('MMMM Do YYYY, h:mm:ss a');
+});
 
 /**
  * The following block of code may be used to automatically register your
