@@ -9,13 +9,28 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+//Vue forms
 import { Form, HasError, AlertError } from 'vform'
 window.Form = Form;
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
 
+//moment.js for dates
 import moment from 'moment'
 
+//sweetalert
+import swal from 'sweetalert2'
+window.swal = swal;
+
+const toast = swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+});
+window.toast = toast;
+
+//vuew progress bar
 import VueProgressBar from 'vue-progressbar' 
 Vue.use(VueProgressBar, {
     color: 'rgb(143, 255, 199)',
@@ -23,6 +38,11 @@ Vue.use(VueProgressBar, {
     height: '3px'
 });
 
+
+//new instance of Vue
+window.Fire = new Vue();
+
+//routes of Vue
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
@@ -36,7 +56,8 @@ const router = new VueRouter({
     mode: 'history', // added for clean url
     routes // short for `routes: routes`
 })
-  
+
+//javascript like functions/filter
 Vue.filter('upText',function(text){
     return text.charAt(0).toUpperCase() + text.slice(1);
 });
