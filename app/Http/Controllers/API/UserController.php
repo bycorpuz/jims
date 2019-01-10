@@ -10,6 +10,18 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    
+    //added for security purposes like sa pag login
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -68,7 +80,7 @@ class UserController extends Controller
         $this->validate($request,[
             'name' => 'required|string|max:191',
             'email' => 'required|string|email|max:191|unique:users,email,'.$user->id,
-            'password' => 'sometimes|min:6'
+            'password' => 'sometimes|required|min:6'
         ]);
         $user->update($request->all());
         return ['message'=>'Update the user info'];
@@ -86,4 +98,41 @@ class UserController extends Controller
         $user->delete();
         return ['message' => 'User Deleted'];
     }
+
+    public function profile(){
+        return auth('api')->user();
+    }
+
+    public function updateProfile(Request $request){
+        $user = auth('api')->user();
+
+        $this->validate($request,[
+            'name' => 'required|string|max:191',
+            'email' => 'required|string|email|max:191|unique:users,email,'.$user->id,
+            'password' => 'sometimes|required|min:6'
+        ]);
+
+        $currentPhoto = $user->photo;
+        if ($request->photo != $currentPhoto){
+            $name = time() . '.' . explode('/', explode(':', substr($request->photo, 0, strpos($request->photo, ';')))[1])[1];
+
+            \Image::make($request->photo)->save(public_path('img/profile/').$name);
+
+            //$request->photo = $name;
+            $request->merge(['photo' => $name]); //same idea as commented above
+
+            //deletion of the previous uploaded photo
+            $userPhoto = public_path('img/profile/').$currentPhoto;
+            if (file_exists($userPhoto)){
+                @unlink($userPhoto);
+            }
+        }
+
+        if (!empty($request->password)){
+            $request->merge(['password' => Hash::make($request['password'])]);
+        }
+
+        $user->update($request->all());
+    }
+    
 }
