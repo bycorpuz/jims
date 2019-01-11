@@ -50,7 +50,8 @@ let routes = [
     { path: '/dashboard', component: require('./components/Dashboard.vue').default },
     { path: '/developer', component: require('./components/Developer.vue').default },
     { path: '/profile', component: require('./components/Profile.vue').default },
-    { path: '/users', component: require('./components/Users.vue').default }
+    { path: '/users', component: require('./components/Users.vue').default },
+    { path: '*', component: require('./components/NotFound.vue').default } //always on the bottom para kung mag type ug route sa URL mag display ug 404
 ]
 
 const router = new VueRouter({
@@ -82,6 +83,16 @@ Vue.component(
     'passport-personal-access-tokens',
     require('./components/passport/PersonalAccessTokens.vue').default
 );
+
+//Not found component with svg background
+Vue.component(
+    'not-found',
+    require('./components/NotFound.vue').default
+);
+
+//ACL (Gate) for user control
+import Gate from "./Gate";
+Vue.prototype.$gate = new Gate(window.user); //to access globally using javascript
 
 /**
  * The following block of code may be used to automatically register your

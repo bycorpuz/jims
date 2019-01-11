@@ -55,70 +55,65 @@
                 <div class="card">
                     <div class="card-header p-2">
                         <ul class="nav nav-pills">
-                        <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Activity</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Settings</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="#settings" data-toggle="tab">Settings</a></li>
                         </ul>
                     </div><!-- /.card-header -->
                     <div class="card-body">
                         <div class="tab-content">
-                        <div class="active tab-pane" id="activity">
-                            User activity here!
-                        </div>
+                            <div class="tab-pane active" id="settings">
+                                <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label for="inputName" class="col-sm-2 control-label">Name</label>
 
-                        <div class="tab-pane" id="settings">
-                            <form class="form-horizontal">
-                            <div class="form-group">
-                                <label for="inputName" class="col-sm-2 control-label">Name</label>
+                                    <div class="col-sm-12">
+                                        <input v-model="form.name" type="text" class="form-control" id="inputName" placeholder="Name"
+                                        :class="{ 'is-invalid': form.errors.has('name') }">
+                                        <has-error :form="form" field="name"></has-error>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputEmail" class="col-sm-2 control-label">Email</label>
 
-                                <div class="col-sm-12">
-                                    <input v-model="form.name" type="text" class="form-control" id="inputName" placeholder="Name"
-                                    :class="{ 'is-invalid': form.errors.has('name') }">
-                                    <has-error :form="form" field="name"></has-error>
+                                    <div class="col-sm-12">
+                                        <input v-model="form.email" type="text" class="form-control" id="inputEmail" placeholder="Email"
+                                        :class="{ 'is-invalid': form.errors.has('email') }">
+                                        <has-error :form="form" field="email"></has-error>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="inputEmail" class="col-sm-2 control-label">Email</label>
+                                <div class="form-group">
+                                    <label for="inputBio" class="col-sm-2 control-label">Biography</label>
 
-                                <div class="col-sm-12">
-                                    <input v-model="form.email" type="text" class="form-control" id="inputEmail" placeholder="Email"
-                                    :class="{ 'is-invalid': form.errors.has('email') }">
-                                    <has-error :form="form" field="email"></has-error>
+                                    <div class="col-sm-12">
+                                        <textarea v-model="form.bio" class="form-control" id="inputBio" placeholder="Biography"
+                                        :class="{ 'is-invalid': form.errors.has('bio') }">
+                                        </textarea>
+                                    </div>
+                                    <has-error :form="form" field="bio"></has-error>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="inputBio" class="col-sm-2 control-label">Biography</label>
+                                <div class="form-group">
+                                    <label for="photo" class="col-sm-2 control-label">Profile Photo</label>
 
-                                <div class="col-sm-12">
-                                    <textarea v-model="form.bio" class="form-control" id="inputBio" placeholder="Biography"
-                                    :class="{ 'is-invalid': form.errors.has('bio') }">
-                                    </textarea>
+                                    <div class="col-sm-12">
+                                    <input @change="updateProfile" type="file" class="form-input" name="photo">
+                                    </div>
                                 </div>
-                                <has-error :form="form" field="bio"></has-error>
-                            </div>
-                            <div class="form-group">
-                                <label for="photo" class="col-sm-2 control-label">Profile Photo</label>
+                                <div class="form-group">
+                                    <label for="inputPassword" class="col-sm-4 control-label">Password (leave if not changing)</label>
 
-                                <div class="col-sm-12">
-                                <input @change="updateProfile" type="file" class="form-input" name="photo">
+                                    <div class="col-sm-12">
+                                        <input v-model="form.password" type="text" class="form-control" id="inputPassword" placeholder="Password"
+                                        :class="{ 'is-invalid': form.errors.has('password') }">
+                                        <has-error :form="form" field="password"></has-error>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="inputPassword" class="col-sm-4 control-label">Password (leave if not changing)</label>
-
-                                <div class="col-sm-12">
-                                    <input v-model="form.password" type="text" class="form-control" id="inputPassword" placeholder="Password"
-                                    :class="{ 'is-invalid': form.errors.has('password') }">
-                                    <has-error :form="form" field="password"></has-error>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-12">
+                                    <button @click.prevent="updateInfo" type="submit" class="btn btn-primary">Update</button>
+                                    </div>
                                 </div>
+                                </form>
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-offset-2 col-sm-12">
-                                <button @click.prevent="updateInfo" type="submit" class="btn btn-primary">Update</button>
-                                </div>
-                            </div>
-                            </form>
-                        </div>
-                        <!-- /.tab-pane -->
+                            <!-- /.tab-pane -->
                         </div>
                         <!-- /.tab-content -->
                     </div><!-- /.card-body -->
@@ -137,7 +132,7 @@
                     name : '',
                     email : '',
                     password : '',
-                    type : '',
+                    //type : '',
                     bio : '',
                     photo : ''
                 })
@@ -150,6 +145,10 @@
             },
             updateInfo() {
                 this.$Progress.start();
+                if(this.form.password == ''){
+                    this.form.password = undefined;
+                }
+                
                 this.form.put('api/profile')
                 .then(()=>{
                     Fire.$emit('AfterUpdate');

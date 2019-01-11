@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -47,11 +46,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <router-link to="/home" class="brand-link">
       <img src="./img/logo.png" alt="JIMS Logo" class="brand-image img-circle elevation-3"
            style="opacity: .8">
       <span class="brand-text font-weight-light">J I M S</span>
-    </a>
+    </router-link>
 
     <!-- Sidebar -->
     <div class="sidebar">
@@ -78,32 +77,34 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 Dashboard
               </p>
             </router-link>
-          </li>        
-          <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fa fa-cog text-indigo"></i>
-              <p>
-                Management
-                <i class="right fa fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <router-link to="/users" class="nav-link">
-                  <i class="fas fa-user nav-icon text-purple"></i>
-                  <p>Users</p>
-                </router-link>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item">
-            <router-link to="/developer" class="nav-link">
-              <i class="nav-icon fas fa-cogs text-teal"></i>
-              <p>
-                Developer
-              </p>
-            </router-link>
-          </li>
+          </li>  
+          @can('isAdmin')      
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fa fa-cog text-indigo"></i>
+                <p>
+                  Management
+                  <i class="right fa fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <router-link to="/users" class="nav-link">
+                    <i class="fas fa-user nav-icon text-purple"></i>
+                    <p>Users</p>
+                  </router-link>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <router-link to="/developer" class="nav-link">
+                <i class="nav-icon fas fa-cogs text-teal"></i>
+                <p>
+                  Developer
+                </p>
+              </router-link>
+            </li>
+          @endcan
           <li class="nav-item">
             <router-link to="/profile" class="nav-link">
               <i class="nav-icon fas fa-user text-orange"></i>
@@ -160,6 +161,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
   </footer>
 </div>
 <!-- ./wrapper -->
+
+@auth
+  <script>
+    window.user = @json(auth()->user()) //users information being huide
+  </script>
+@endauth
 
 <script src="/js/app.js"></script>
 </body>
