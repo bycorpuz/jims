@@ -25,7 +25,9 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.6.3",
+        "@types/datatables.net": "^1.10.14",
         "admin-lte": "^3.0.0-alpha.2",
+        "laravel-vue-pagination": "^2.2.0",
         "moment": "^2.23.0",
         "sweetalert2": "^7.33.1",
         "vform": "^1.0.0",

@@ -14,7 +14,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
   <title>J I M S</title>
 
-    <link rel="stylesheet" href="/css/app.css">
+  <link rel="stylesheet" href="/css/app.css">
+  <link rel="stylesheet" href="/css/dataTables/datatables.min.css">
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper" id="app">

@@ -15,6 +15,9 @@ window.Form = Form;
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
 
+//Vue Pagination
+Vue.component('pagination', require('laravel-vue-pagination'));
+
 //moment.js for dates
 import moment from 'moment'
 
@@ -93,6 +96,9 @@ Vue.component(
 //ACL (Gate) for user control
 import Gate from "./Gate";
 Vue.prototype.$gate = new Gate(window.user); //to access globally using javascript
+
+//DataTables
+
 
 /**
  * The following block of code may be used to automatically register your
