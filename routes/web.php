@@ -1,5 +1,6 @@
 <?php
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,3 +21,4 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('{path}', 'HomeController@index')->where('path', '([A-z\d-\/_.]+)?'); //added for clean url --- mawala na ang /home#
+

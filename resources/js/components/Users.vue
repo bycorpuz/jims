@@ -1,5 +1,7 @@
 <template>
     <div class="container">
+        
+        
         <div class="row mt-5" v-if="$gate.isAdminOrAuthor()"> <!-- para dile ma view kung ang user is dile admin -->
           <div class="col-md-12">
             <div class="card">
@@ -8,36 +10,48 @@
 
                 <div class="card-tools">
                     <button class="btn btn-success" @click="newModal">Add New <i class="fas fa-user-plus fa-fw"></i></button>
+                    <download-excel
+                        class   = "btn btn-success"
+                        :data   = "json_data"
+                        :fields = "json_fields"
+                        name    = "users.xls">
+                        Download <i class="fas fa-download fa-fw"></i>
+                    </download-excel>
                 </div>
+
+    
 
               </div>
               <!-- /.card-header -->
               <div class="card-body table-responsive p-0">
                 <table class="table table-hover" id="userTable">
-                  <tbody><tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Type</th>
-                    <th>Registered at</th>
-                    <th>Modify</th>
-                  </tr>
-                  <tr v-for="user in users.data" :key="user.id">
-                    <td>{{user.id}}</td>
-                    <td>{{user.name}}</td>
-                    <td>{{user.email}}</td>
-                    <td>{{user.type | upText}}</td>
-                    <td>{{user.created_at | createdDate}}</td>
-                    <td>
-                        <a href="#" @click="editModal(user)">
-                            <i class="fa fa-edit text-blue"></i>
-                        </a>
-                        /
-                        <a href="#" @click="deleteUser(user.id)">
-                            <i class="fa fa-trash text-red"></i>
-                        </a>
-                    </td>
-                  </tr>
+                  <tbody>
+                    <tr>
+                        <th>#</th>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Type</th>
+                        <th>Registered at</th>
+                        <th>Modify</th>
+                    </tr>
+                    <tr v-for="(user, index) in users.data" :key="user.id">
+                        <td>{{index + 1}}</td>
+                        <td>{{user.id}}</td>
+                        <td>{{user.name}}</td>
+                        <td>{{user.email}}</td>
+                        <td>{{user.type | upText}}</td>
+                        <td>{{user.created_at | createdDate}}</td>
+                        <td>
+                            <a href="#" @click="editModal(user)">
+                                <i class="fa fa-edit text-blue"></i>
+                            </a>
+                            /
+                            <a href="#" @click="deleteUser(user.id)">
+                                <i class="fa fa-trash text-red"></i>
+                            </a>
+                        </td>
+                    </tr>
                 </tbody></table>
               </div>
               <!-- /.card-body -->
@@ -111,6 +125,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 </template>
 
@@ -128,7 +143,22 @@
                     type : '',
                     bio : '',
                     photo : ''
-                })
+                }),
+
+                json_fields: {
+                    'Complete name': 'name',
+                    'Email': 'email',
+                    'Register at': 'created_at',
+                },
+                json_data: [],
+                json_meta: [
+                    [
+                        {
+                            'key': 'charset',
+                            'value': 'utf-8'
+                        }
+                    ]
+                ],
             }
         },
         methods: {
@@ -198,6 +228,7 @@
                 //para dile ma view kung ang user is dile admin
                 if(this.$gate.isAdminOrAuthor()){
                     axios.get("api/user").then(({ data }) => (this.users = data) );
+                    axios.get("api/usersAll").then(({ data }) => (this.json_data = data.data) );
                 }
             },
             createUser() {
@@ -221,6 +252,16 @@
             this.loadUsers();
             Fire.$on(['AfterCreate','AfterDelete','AfterUpdate'], () => {
                 this.loadUsers();
+            });
+            Fire.$on(['Searching'], () => {
+                let query = this.$parent.search; //$parent is the app.js
+                axios.get('api/findUser?q=' + query)
+                .then((data)=>{
+                    this.users = data.data;
+                })
+                .catch(()=>{
+
+                })
             });
         }
     }

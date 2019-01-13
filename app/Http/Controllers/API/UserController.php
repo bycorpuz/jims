@@ -30,8 +30,16 @@ class UserController extends Controller
     public function index()
     {
         //$this->authorize('isAdmin');
-        if (\Gate::allows('isAdmin') || \Gate::allows('isAuthor')){
+        if (\Gate::allows('isAdmin') || \Gate::allows('isAuthor')){ 
             return User::latest()->paginate(10);
+        }
+    }
+
+    public function usersAll()
+    {
+        //$this->authorize('isAdmin');
+        if (\Gate::allows('isAdmin') || \Gate::allows('isAuthor')){ 
+            return User::latest()->paginate(1000000000);
         }
     }
 
@@ -139,4 +147,17 @@ class UserController extends Controller
         $user->update($request->all());
     }
     
+    public function search(){
+        if($search = \Request::get('q')) {
+            $users = User::where(function($query) use ($search){
+                $query->where('name', 'LIKE', "%$search%")
+                    ->orWhere('email','LIKE',"%$search%")
+                    ->orWhere('type','LIKE',"%$search%");
+            })->paginate(20);
+        } else {
+            $users = User::latest()->paginate(10);
+        }
+
+        return $users;
+    }
 }

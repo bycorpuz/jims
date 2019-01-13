@@ -2,6 +2,9 @@
 
 use Illuminate\Http\Request;
 
+use App\Exports\UsersExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -25,3 +28,10 @@ Route::get('profile', 'API\UserController@profile');
 Route::put('profile', 'API\UserController@updateProfile');
 
 Route::resource('users', 'API\UserController');
+Route::get('usersAll', 'API\UserController@usersAll');
+
+Route::get('findUser', 'API\UserController@search');
+
+Route::get('downloadUsers', function (){
+    return Excel::download(new UsersExport, 'users.xlsx');
+});

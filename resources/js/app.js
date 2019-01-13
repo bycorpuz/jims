@@ -97,7 +97,9 @@ Vue.component(
 import Gate from "./Gate";
 Vue.prototype.$gate = new Gate(window.user); //to access globally using javascript
 
-//DataTables
+//Exporting module
+import JsonExcel from 'vue-json-excel'
+Vue.component('downloadExcel', JsonExcel)
 
 
 /**
@@ -119,7 +121,16 @@ Vue.component('example-component', require('./components/ExampleComponent.vue') 
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+ //Main Instance
 const app = new Vue({
     el: '#app',
-    router
+    router,
+    data: {
+        search: ''
+    },
+    methods: {
+        searchit: _.debounce( () => {
+            Fire.$emit('Searching');
+        }, 500)
+    }
 });
