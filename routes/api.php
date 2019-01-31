@@ -32,6 +32,3 @@ Route::get('usersAll', 'API\UserController@usersAll');
 
 Route::get('findUser', 'API\UserController@search');
 
-Route::get('downloadUsers', function (){
-    return Excel::download(new UsersExport, 'users.xlsx');
-});
